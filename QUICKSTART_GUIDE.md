@@ -37,7 +37,7 @@ gcloud run deploy SERVICE_NAME \
     --labels dev-tutorial=hackathon-nyc-cloud-run-gpu-25
 
 # SERVICE_NAME = anything-you-want
-# GEMMA_PARAMETER = gemma3-4b
+# GEMMA_PARAMETER = gemma3-1b
 # REGION = europe-west1
 
 # Get your Gemma URL
@@ -75,7 +75,7 @@ Before deploying the hackathon agent, let's test the Gemma service to make sure 
 
 ```bash
 # Start the proxy (choose Y when prompted to install cloud-run-proxy component)
-gcloud run services proxy SERVICE_NAME --port=9090
+gcloud run services proxy gemma-service --port=9090
 ```
 
 In a separate terminal tab, test the service:
@@ -83,7 +83,7 @@ In a separate terminal tab, test the service:
 ```bash
 # Send a request to test the Gemma service
 curl http://localhost:9090/api/generate -d '{
-  "model": "gemma3:4b",
+  "model": "gemma3:1b",
   "prompt": "Why is the sky blue?"
 }'
 ```
@@ -101,7 +101,7 @@ cd cloud-run-hackathon-2025/hackathon-agent
 cat > .env << EOF
 GEMMA_URL=$GEMMA_URL
 GOOGLE_CLOUD_PROJECT=your-project-id
-GOOGLE_CLOUD_LOCATION=us-central1
+GOOGLE_CLOUD_LOCATION=europe-west1
 GOOGLE_GENAI_USE_VERTEXAI=FALSE
 EOF
 
@@ -125,7 +125,7 @@ gcloud run deploy hackathon-agent \
     --set-env-vars GOOGLE_GENAI_USE_VERTEXAI=$GOOGLE_GENAI_USE_VERTEXAI
 
 # 5. Get your agent URL
-export AGENT_URL=$(gcloud run services describe hackathon-agent --region=us-central1 --format='value(status.url)')
+export AGENT_URL=$(gcloud run services describe hackathon-agent --region=europe-west1 --format='value(status.url)')
 echo "🎉 Agent deployed at: $AGENT_URL"
 ```
 
